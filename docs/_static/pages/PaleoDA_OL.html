@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Adding new priors &#8212; Paleoclimate Data Assimilation v1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=e160b93e"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Paleoclimate Data Assimilation documentation" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="adding-new-priors">
+<span id="prior"></span><h1>Adding new priors<a class="headerlink" href="#adding-new-priors" title="Link to this heading">¶</a></h1>
+<section id="what-prior-folders-and-file-names-should-look-like">
+<h2>What prior folders and file names should look like<a class="headerlink" href="#what-prior-folders-and-file-names-should-look-like" title="Link to this heading">¶</a></h2>
+<p>If you can easily move your prior data put it in the ../LMR/data/model folder.
+Your prior netcdf files should be saved in a folder with the same name as the
+prior as defined in the config.yml file. If you are adding a new prior, create
+a new folder with the folder name that will be called in the config.yml file.
+For example, the ccsm4 past1000 prior uses this folder name:
+ccsm4_last_millenium, so this folder name is defined as the prior source in the
+config file. This folder name will also need to be added in various places in
+LMR_prior.py and datasets.yml - see details below in ‘How to add a new prior to
+the LMR’. If your prior data is too larger or cumbersome to move you can leave
+it where it is and specify the path at a later step (Step 2). However, make sure
+that the filenames adhere to the convention described below.</p>
+<p>Within this new prior folder, place all the new prior files. Prior files used
+in the LMR should start with the variable name, followed by the level, the model
+component, etc.</p>
+<p>For example, a few relevant ccsm4 past1000
+filenames:
+tas_sfc_Amon_CCSM4_past1000_085001-185012.nc
+pr_sfc_Amon_CCSM4_past1000_085001-185012.nc
+zg_500hPa_Amon_CCSM4_past1000_085001-185012.nc
+Each prior file should contain four variables: the variable of interest, time,
+latitude and longitude. The dimensions also need to be named: time, lat, and
+lon.</p>
+</section>
+<section id="how-to-add-a-new-prior-to-the-lmr">
+<h2>How to add a new prior to the LMR<a class="headerlink" href="#how-to-add-a-new-prior-to-the-lmr" title="Link to this heading">¶</a></h2>
+<ol class="arabic">
+<li><p>Create a class for your new prior in LMR_prior.py. Creating a new class
+involves changing the LMR_prior.py in two locations (you can copy, paste, and
+change previous prior information to fit your new prior folder name):</p>
+<p>Add the prior folder name in another ‘elif’ statements in the
+prior_assignment()
+function (between lines ~50 and ~100). You can do this by copying and
+pasting an
+‘elif’ statement from a previous prior and changing the iprior variable to a
+string of the new prior folder name.
+Define new class for the prior (after line ~337). Do this by copying a class
+from another prior (~10 lines of code) and simply change the name of the
+class
+to reflect your prior folder name. This class should contain one read_prior()
+function.</p>
+</li>
+<li><p>Add your new prior to datasets.yml. The instrumental-based datasets are
+listed first, followed by the model prior dataset information (after line
+~75).
+Copy and paste the information from one of the model priors and change the
+relevant folder name in ‘datafile’ and variable names you have data for and
+wish to reconstruct in ‘available_vars’. Make sure that all the relevant
+variable names are listed here, otherwise the LMR will not be able to
+reconstruct them. Note also that ‘datadir=null’ will default to LMR_path
+(../LMR/data/model folder). If you’re data is in another location, you can
+add that directory here (datadir = ‘path’) and LMR will know where to look
+for the data.</p></li>
+<li><p>Add the appropriate model prior source information to the config.yml file
+(prior_source, line ~350). Although not necessary, you may want to rename the
+experiment to match the new prior information. For example, change the nexp
+(experiment name, line ~20-25) to: ccsm4_past1000_PAGES2kdbv2_annualPSM.</p></li>
+<li><p>In the LMR/misc folder, precalculate ye’s by running build_ye_file.py.
+You will need to follow the above steps 1 through 4 every time you add a new
+prior.</p></li>
+<li><p>Run the main LMR code (LMR_wrapper.py) once you have precalculated the ye’s.</p></li>
+</ol>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Paleoclimate Data Assimilation</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Adding new priors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-prior-folders-and-file-names-should-look-like">What prior folders and file names should look like</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-add-a-new-prior-to-the-lmr">How to add a new prior to the LMR</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Paleoclimate Data Assimilation documentation</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Sun H. and L. Lei.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/pages/PaleoDA_OL.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
