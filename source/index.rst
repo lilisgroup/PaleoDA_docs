@@ -6,10 +6,12 @@
 Paleoclimate Data Assimilation documentation
 ============================================
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
+This is a document for an online paleoclimate data assimilation with super-resolution. The code can be found on 
+`PaleoDA_OL <https://github.com/lilisgroup/PaleoDA_OL>`_
 
+**Documentation contributors:**
+
+* Sun H., Z. Zhao, and L. Lei, *Nanjing University*
 
 .. toctree::
    :maxdepth: 2
@@ -17,3 +19,10 @@ documentation for details.
 
    pages/PaleoDA_OL
    pages/test
+
+
+Contributing to docs
+--------------------
+The documentation needs more work. Your contribution is welcomed!
+
+

@@ -1,7 +1,3 @@
-####################
-Version 1
-####################
+# Introduction of Structure
 
-Paleo
-========================
-need to be update
+CESM LME 003-012 is used to train the surrogate models: LIM and NET

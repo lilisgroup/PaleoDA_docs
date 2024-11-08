@@ -1,9 +1,9 @@
-.. _prior:
+.. _PaleoDA_Online:
 
-Adding new priors
-=================
+PaleoDA_Online
+==========
 
-What prior folders and file names should look like
+Sturcture of online paleoclimate data assimilation
 --------------------------------------------------
 If you can easily move your prior data put it in the ../LMR/data/model folder.
 Your prior netcdf files should be saved in a folder with the same name as the
