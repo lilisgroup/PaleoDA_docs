@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PaleoDA_Online &mdash; Paleoclimate Data Assimilation v1.0 documentation</title>
+  <title>Overview of PDA_OL &mdash; Paleoclimate Data Assimilation v1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
@@ -16,10 +16,11 @@
       <script src="../_static/documentation_options.js?v=e160b93e"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" integrity="sha384-......" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Introduction of Structure" href="test.html" />
+    <link rel="next" title="Code Structure" href="Code.html" />
     <link rel="prev" title="Paleoclimate Data Assimilation documentation" href="../index.html" /> 
 </head>
 
@@ -44,12 +45,13 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">PaleoDA_Online</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#sturcture-of-online-paleoclimate-data-assimilation">Sturcture of online paleoclimate data assimilation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-to-add-a-new-prior-to-the-lmr">How to add a new prior to the LMR</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview of PDA_OL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#proxies-and-simulations">Proxies and simulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#surrogate-models">Surrogate models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#da-methods">DA methods</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="test.html">Introduction of Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Code.html">Code Structure</a></li>
 </ul>
 
         </div>
@@ -66,7 +68,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">PaleoDA_Online</li>
+      <li class="breadcrumb-item active">Overview of PDA_OL</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/pages/PaleoDA_OL.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -76,71 +78,60 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="paleoda-online">
-<span id="id1"></span><h1>PaleoDA_Online<a class="headerlink" href="#paleoda-online" title="Link to this heading"></a></h1>
-<section id="sturcture-of-online-paleoclimate-data-assimilation">
-<h2>Sturcture of online paleoclimate data assimilation<a class="headerlink" href="#sturcture-of-online-paleoclimate-data-assimilation" title="Link to this heading"></a></h2>
-<p>If you can easily move your prior data put it in the ../LMR/data/model folder.
-Your prior netcdf files should be saved in a folder with the same name as the
-prior as defined in the config.yml file. If you are adding a new prior, create
-a new folder with the folder name that will be called in the config.yml file.
-For example, the ccsm4 past1000 prior uses this folder name:
-ccsm4_last_millenium, so this folder name is defined as the prior source in the
-config file. This folder name will also need to be added in various places in
-LMR_prior.py and datasets.yml - see details below in ‘How to add a new prior to
-the LMR’. If your prior data is too larger or cumbersome to move you can leave
-it where it is and specify the path at a later step (Step 2). However, make sure
-that the filenames adhere to the convention described below.</p>
-<p>Within this new prior folder, place all the new prior files. Prior files used
-in the LMR should start with the variable name, followed by the level, the model
-component, etc.</p>
-<p>For example, a few relevant ccsm4 past1000
-filenames:
-tas_sfc_Amon_CCSM4_past1000_085001-185012.nc
-pr_sfc_Amon_CCSM4_past1000_085001-185012.nc
-zg_500hPa_Amon_CCSM4_past1000_085001-185012.nc
-Each prior file should contain four variables: the variable of interest, time,
-latitude and longitude. The dimensions also need to be named: time, lat, and
-lon.</p>
+  <section id="overview-of-pda-ol">
+<span id="id1"></span><h1>Overview of PDA_OL<a class="headerlink" href="#overview-of-pda-ol" title="Link to this heading"></a></h1>
+<section id="proxies-and-simulations">
+<h2>Proxies and simulations<a class="headerlink" href="#proxies-and-simulations" title="Link to this heading"></a></h2>
+<p>1. Proxies are from the Past Global Changes 2k Network
+(PAGES2k <a class="reference external" href="https://www.nature.com/articles/sdata201788">Emile-Geay et al. 2017</a>)
+with temporal coverage of the Common Era (0-2000 CE) The proxy system model (PSM),
+i.e., the forward operator, is constructed by a linear univariate model for each kind of proxy,
+based on annual means / seasonal averages for tree-based proxies
+and annual means for the other kinds of proxies (Tardif et al. 2019).
+For the <span class="math notranslate nohighlight">\(p^{th}\)</span> proxy, the PSM is calibrated relative to the
+NASA Goddard Institute for Space Studies surface temperature analysis (GISTEMP; Hansen et al. 2010),
+through the linear regression that gives the best fit to the proxy data.
+The regression residual <span class="math notranslate nohighlight">\(\sigma _p^2\)</span> is used as the observation error variance,
+i.e., the diagonal element of the diagonal matrix <strong>R</strong></p>
+<p>2. The model data is from the Community Earth System Model-Last Millennium Ensemble Project
+(CESM LME; Otto-Bliesner et al., 2016).
+Ensemble simulations of the CESM LME with full forcing,
+including the transient evolution of solar intensity, volcanic activity,
+orbital parameters, changes in land use/land cover and greenhouse gases,
+give a total of 13 full-forcing simulations from 850 to 2005 CE.
+For annual mean and seasonal averages,
+the monthly output is processed by removing the climatology over the entire period.</p>
 </section>
-<section id="how-to-add-a-new-prior-to-the-lmr">
-<h2>How to add a new prior to the LMR<a class="headerlink" href="#how-to-add-a-new-prior-to-the-lmr" title="Link to this heading"></a></h2>
-<ol class="arabic">
-<li><p>Create a class for your new prior in LMR_prior.py. Creating a new class
-involves changing the LMR_prior.py in two locations (you can copy, paste, and
-change previous prior information to fit your new prior folder name):</p>
-<p>Add the prior folder name in another ‘elif’ statements in the
-prior_assignment()
-function (between lines ~50 and ~100). You can do this by copying and
-pasting an
-‘elif’ statement from a previous prior and changing the iprior variable to a
-string of the new prior folder name.
-Define new class for the prior (after line ~337). Do this by copying a class
-from another prior (~10 lines of code) and simply change the name of the
-class
-to reflect your prior folder name. This class should contain one read_prior()
-function.</p>
-</li>
-<li><p>Add your new prior to datasets.yml. The instrumental-based datasets are
-listed first, followed by the model prior dataset information (after line
-~75).
-Copy and paste the information from one of the model priors and change the
-relevant folder name in ‘datafile’ and variable names you have data for and
-wish to reconstruct in ‘available_vars’. Make sure that all the relevant
-variable names are listed here, otherwise the LMR will not be able to
-reconstruct them. Note also that ‘datadir=null’ will default to LMR_path
-(../LMR/data/model folder). If you’re data is in another location, you can
-add that directory here (datadir = ‘path’) and LMR will know where to look
-for the data.</p></li>
-<li><p>Add the appropriate model prior source information to the config.yml file
-(prior_source, line ~350). Although not necessary, you may want to rename the
-experiment to match the new prior information. For example, change the nexp
-(experiment name, line ~20-25) to: ccsm4_past1000_PAGES2kdbv2_annualPSM.</p></li>
-<li><p>In the LMR/misc folder, precalculate ye’s by running build_ye_file.py.
-You will need to follow the above steps 1 through 4 every time you add a new
-prior.</p></li>
-<li><p>Run the main LMR code (LMR_wrapper.py) once you have precalculated the ye’s.</p></li>
-</ol>
+<section id="surrogate-models">
+<h2>Surrogate models<a class="headerlink" href="#surrogate-models" title="Link to this heading"></a></h2>
+<p>The traditional online DA advances the numerical model from the posteriors,
+and provides priors with flow-dependent uncertainties for next DA cycle.
+Instead of using numerical models that are computationally expensive,
+data-driven surrogate models are used here for PDA_OL.
+Due to the different time scales of proxy records, the PSM requires different
+seasonal averages. Therefore, the integrate time of the surrogate model is usually the average
+time scale of the proxies, which is generally 12 months for PAGES2k. Based on this,
+the surrogate model is designed to take in a continuous 12 months of SAT and SST fields and
+predict for the subsequent 12 months:</p>
+<div class="math notranslate nohighlight">
+\[{\bf{X}}_{t{\rm{ + 1:t + 12}}}^f = M\left( {{\bf{X}}_{t - 12:t}^a} \right)\]</div>
+<p>where the superscripts <span class="math notranslate nohighlight">\(f\)</span> and <span class="math notranslate nohighlight">\(a\)</span> denote prior and posterior, respectively.
+<em>M</em> is a self-attention-based surrogate model (Zhou and Zhang 2023)</p>
+<img alt="../_images/transformer.png" src="../_images/transformer.png" />
+<p>The loss function <em>L</em> is defined using the mean square eroor (MSE) of the 12 predictive months and the truth:</p>
+<div class="math notranslate nohighlight">
+\[L = \left\| {{\bf{X}}_{t + 1:t + 12}^{} - M\left( {{\bf{X}}_{t - 12:t}^{}} \right)} \right\|_{}^2\]</div>
+</section>
+<section id="da-methods">
+<h2>DA methods<a class="headerlink" href="#da-methods" title="Link to this heading"></a></h2>
+<p>Different from ensemble priors of offline DA
+that are randomly sampled from a climatological simulation,
+ensemble priors <span class="math notranslate nohighlight">\({\bf{x}}_{cyc,i}^f\)</span> (<span class="math notranslate nohighlight">\(i =1,…,N\)</span>) of online DA are short-term forecasts based on the surrogate models.
+The ensemble mean <span class="math notranslate nohighlight">\({\bf{\bar x}}_{cyc}^f = \left( {1/N} \right)\sum\limits_{i = 1}^N {{\bf{x}}_{cyc,i}^f}\)</span>
+and ensemble perturbations <span class="math notranslate nohighlight">\({\bf{x'}}_{cyc,i}^f\)</span> (<span class="math notranslate nohighlight">\(i =1,…,N\)</span>) are updated separately,
+but through the integrated hybrid EnKF (IHEnKF, Lei et al. 2021)
+that is superior to the commonly used hybrid ensemble-variational method
+but within a pure ensemble framework.</p>
 </section>
 </section>
 
@@ -149,13 +140,13 @@ prior.</p></li>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../index.html" class="btn btn-neutral float-left" title="Paleoclimate Data Assimilation documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="test.html" class="btn btn-neutral float-right" title="Introduction of Structure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="Code.html" class="btn btn-neutral float-right" title="Code Structure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Sun H. and L. Lei.</p>
+    <p>&#169; Copyright 2024, Sun H., Z. Zhao, and L. Lei.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

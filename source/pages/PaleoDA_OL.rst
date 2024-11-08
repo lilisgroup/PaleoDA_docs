@@ -1,74 +1,62 @@
-.. _PaleoDA_Online:
+.. _Overview of PDA_OL:
 
-PaleoDA_Online
-==========
+Overview of PDA_OL
+==================
 
-Sturcture of online paleoclimate data assimilation
+Proxies and simulations
 --------------------------------------------------
-If you can easily move your prior data put it in the ../LMR/data/model folder.
-Your prior netcdf files should be saved in a folder with the same name as the
-prior as defined in the config.yml file. If you are adding a new prior, create
-a new folder with the folder name that will be called in the config.yml file.
-For example, the ccsm4 past1000 prior uses this folder name:
-ccsm4_last_millenium, so this folder name is defined as the prior source in the
-config file. This folder name will also need to be added in various places in
-LMR_prior.py and datasets.yml - see details below in ‘How to add a new prior to
-the LMR’. If your prior data is too larger or cumbersome to move you can leave
-it where it is and specify the path at a later step (Step 2). However, make sure
-that the filenames adhere to the convention described below.
+1. Proxies are from the Past Global Changes 2k Network 
+(PAGES2k `Emile-Geay et al. 2017 <https://www.nature.com/articles/sdata201788>`_) 
+with temporal coverage of the Common Era (0-2000 CE) The proxy system model (PSM), 
+i.e., the forward operator, is constructed by a linear univariate model for each kind of proxy, 
+based on annual means / seasonal averages for tree-based proxies 
+and annual means for the other kinds of proxies (Tardif et al. 2019). 
+For the :math:`p^{th}` proxy, the PSM is calibrated relative to the 
+NASA Goddard Institute for Space Studies surface temperature analysis (GISTEMP; Hansen et al. 2010), 
+through the linear regression that gives the best fit to the proxy data. 
+The regression residual :math:`\sigma _p^2` is used as the observation error variance, 
+i.e., the diagonal element of the diagonal matrix **R**
 
-Within this new prior folder, place all the new prior files. Prior files used
-in the LMR should start with the variable name, followed by the level, the model
-component, etc.
-
-For example, a few relevant ccsm4 past1000
-filenames:
-tas_sfc_Amon_CCSM4_past1000_085001-185012.nc
-pr_sfc_Amon_CCSM4_past1000_085001-185012.nc
-zg_500hPa_Amon_CCSM4_past1000_085001-185012.nc
-Each prior file should contain four variables: the variable of interest, time,
-latitude and longitude. The dimensions also need to be named: time, lat, and
-lon.
+2. The model data is from the Community Earth System Model-Last Millennium Ensemble Project 
+(CESM LME; Otto-Bliesner et al., 2016). 
+Ensemble simulations of the CESM LME with full forcing, 
+including the transient evolution of solar intensity, volcanic activity, 
+orbital parameters, changes in land use/land cover and greenhouse gases, 
+give a total of 13 full-forcing simulations from 850 to 2005 CE. 
+For annual mean and seasonal averages, 
+the monthly output is processed by removing the climatology over the entire period.
 
 
-How to add a new prior to the LMR
+Surrogate models
 ---------------------------------
-1. Create a class for your new prior in LMR_prior.py. Creating a new class
-   involves changing the LMR_prior.py in two locations (you can copy, paste, and
-   change previous prior information to fit your new prior folder name):
+The traditional online DA advances the numerical model from the posteriors, 
+and provides priors with flow-dependent uncertainties for next DA cycle. 
+Instead of using numerical models that are computationally expensive, 
+data-driven surrogate models are used here for PDA_OL. 
+Due to the different time scales of proxy records, the PSM requires different 
+seasonal averages. Therefore, the integrate time of the surrogate model is usually the average 
+time scale of the proxies, which is generally 12 months for PAGES2k. Based on this, 
+the surrogate model is designed to take in a continuous 12 months of SAT and SST fields and 
+predict for the subsequent 12 months:
 
-   Add the prior folder name in another ‘elif’ statements in the
-   prior_assignment()
-   function (between lines ~50 and ~100). You can do this by copying and
-   pasting an
-   ‘elif’ statement from a previous prior and changing the iprior variable to a
-   string of the new prior folder name.
-   Define new class for the prior (after line ~337). Do this by copying a class
-   from another prior (~10 lines of code) and simply change the name of the
-   class
-   to reflect your prior folder name. This class should contain one read_prior()
-   function.
+.. math:: {\bf{X}}_{t{\rm{ + 1:t + 12}}}^f = M\left( {{\bf{X}}_{t - 12:t}^a} \right)
 
-2. Add your new prior to datasets.yml. The instrumental-based datasets are
-   listed first, followed by the model prior dataset information (after line
-   ~75).
-   Copy and paste the information from one of the model priors and change the
-   relevant folder name in ‘datafile’ and variable names you have data for and
-   wish to reconstruct in ‘available_vars’. Make sure that all the relevant
-   variable names are listed here, otherwise the LMR will not be able to
-   reconstruct them. Note also that ‘datadir=null’ will default to LMR_path
-   (../LMR/data/model folder). If you’re data is in another location, you can
-   add that directory here (datadir = ‘path’) and LMR will know where to look
-   for the data.
+where the superscripts :math:`f` and :math:`a` denote prior and posterior, respectively.
+*M* is a self-attention-based surrogate model (Zhou and Zhang 2023)
 
-3. Add the appropriate model prior source information to the config.yml file
-   (prior_source, line ~350). Although not necessary, you may want to rename the
-   experiment to match the new prior information. For example, change the nexp
-   (experiment name, line ~20-25) to: ccsm4_past1000_PAGES2kdbv2_annualPSM.
+.. image:: transformer.png 
 
-4. In the LMR/misc folder, precalculate ye’s by running build_ye_file.py.
-   You will need to follow the above steps 1 through 4 every time you add a new
-   prior.
+The loss function *L* is defined using the mean square eroor (MSE) of the 12 predictive months and the truth:
 
-5. Run the main LMR code (LMR_wrapper.py) once you have precalculated the ye’s.
+.. math:: L = \left\| {{\bf{X}}_{t + 1:t + 12}^{} - M\left( {{\bf{X}}_{t - 12:t}^{}} \right)} \right\|_{}^2
 
+DA methods
+---------------------------------    
+Different from ensemble priors of offline DA 
+that are randomly sampled from a climatological simulation, 
+ensemble priors :math:`{\bf{x}}_{cyc,i}^f` (:math:`i =1,…,N`) of online DA are short-term forecasts based on the surrogate models. 
+The ensemble mean :math:`{\bf{\bar x}}_{cyc}^f = \left( {1/N} \right)\sum\limits_{i = 1}^N {{\bf{x}}_{cyc,i}^f}`  
+and ensemble perturbations :math:`{\bf{x'}}_{cyc,i}^f` (:math:`i =1,…,N`) are updated separately, 
+but through the integrated hybrid EnKF (IHEnKF, Lei et al. 2021) 
+that is superior to the commonly used hybrid ensemble-variational method 
+but within a pure ensemble framework.

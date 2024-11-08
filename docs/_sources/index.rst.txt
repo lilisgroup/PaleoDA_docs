@@ -6,14 +6,23 @@
 Paleoclimate Data Assimilation documentation
 ============================================
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
+This is a document for online paleoclimate data assimilation (PDA_OL). The code can be found on 
+`PaleoDA_OL <https://github.com/lilisgroup/PaleoDA_OL>`_
 
+**Documentation contributors:**
+
+* Sun H., Z. Zhao, and L. Lei, *Nanjing University*
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    pages/PaleoDA_OL
-   pages/test
+   pages/Code
+
+
+Contributing to docs
+--------------------
+The documentation needs more work. Your contribution is welcomed!
+
+

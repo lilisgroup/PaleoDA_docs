@@ -7,8 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'Paleoclimate Data Assimilation'
-copyright = '2024, Sun H. and L. Lei'
-author = 'Sun H. and L. Lei'
+copyright = '2024, Sun H., Z. Zhao, and L. Lei'
+author = 'Sun H., Z. Zhao, and L. Lei'
 release = 'v1.0'
 
 # -- General configuration ---------------------------------------------------
@@ -31,3 +31,7 @@ source_suffix = ['.rst','.md']
 
 html_theme = "sphinx_rtd_theme"
 html_static_path = ['_static']
+
+mathjax_options = {
+    'integrity': 'sha384-......',
+}

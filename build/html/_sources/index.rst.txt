@@ -6,7 +6,7 @@
 Paleoclimate Data Assimilation documentation
 ============================================
 
-This is a document for an online paleoclimate data assimilation with super-resolution. The code can be found on 
+This is a document for online paleoclimate data assimilation (PDA_OL). The code can be found on 
 `PaleoDA_OL <https://github.com/lilisgroup/PaleoDA_OL>`_
 
 **Documentation contributors:**
@@ -18,7 +18,7 @@ This is a document for an online paleoclimate data assimilation with super-resol
    :caption: Contents:
 
    pages/PaleoDA_OL
-   pages/test
+   pages/Code
 
 
 Contributing to docs
