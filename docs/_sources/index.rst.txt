@@ -19,6 +19,7 @@ This is a document for online paleoclimate data assimilation (PDA_OL). The code 
 
    pages/PaleoDA_OL
    pages/Code
+   pages/README
 
 
 Contributing to docs
