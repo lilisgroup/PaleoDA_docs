@@ -1,4 +1,4 @@
-# PaleoDA Code and Documentation Update Guide
+# Code and Documentation Update Guide
 
 ### Code Update Instructions
 
@@ -8,13 +8,21 @@
    git add .
    git commit -m "your comment"
    git push <your-branch>:<github-branch>
+   # if it fails, try
+   git push <your-branch>:<github-branch> --force
 
-2. **Pull Updated Code from GitHub to Server**
+2. **Add Submodule**  
+   If you want to make contributions to the PaleoDA_OL, try to add it as a submodule
+   ```bash
+   cd PaleoDA
+   git submodule add https://github.com/<your-repository> <submodule-name>
+
+3. **Pull Updated Code from GitHub to Server**  
     Once the code on GitHub is updated (by you or others), update the code on your server:
     ```bash
     cd PaleoDA
-    git submodule update --remote <repository>
-    git add <repository>
+    git submodule update --remote <submodule-name>
+    git add <submodule-name>
     git commit -m "your comment"
     git push <your-branch>:<github-branch>
 

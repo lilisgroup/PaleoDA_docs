@@ -31,7 +31,3 @@ source_suffix = ['.rst','.md']
 
 html_theme = "sphinx_rtd_theme"
 html_static_path = ['_static']
-
-mathjax_options = {
-    'integrity': 'sha384-......',
-}
