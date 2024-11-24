@@ -1,0 +1,170 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overview of Online PDA &mdash; Paleoclimate Data Assimilation v1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=e160b93e"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Code Structure" href="Code.html" />
+    <link rel="prev" title="Paleoclimate Data Assimilation documentation" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Paleoclimate Data Assimilation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview of Online PDA</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#proxies-and-simulations">Proxies and simulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#surrogate-models">Surrogate models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#da-methods">DA methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Code.html">Code Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Guide.html">Code and Documentation Update Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Paleoclimate Data Assimilation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Overview of Online PDA</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/pages/Online_PDA.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="overview-of-online-pda">
+<span id="id1"></span><h1>Overview of Online PDA<a class="headerlink" href="#overview-of-online-pda" title="Link to this heading"></a></h1>
+<section id="proxies-and-simulations">
+<h2>Proxies and simulations<a class="headerlink" href="#proxies-and-simulations" title="Link to this heading"></a></h2>
+<p>1. Proxies are from the Past Global Changes 2k Network
+(PAGES2k <a class="reference external" href="https://www.nature.com/articles/sdata201788">Emile-Geay et al. 2017</a>)
+with temporal coverage of the Common Era (0-2000 CE) The proxy system model (PSM),
+i.e., the forward operator, is constructed by a linear univariate model for each kind of proxy,
+based on annual means / seasonal averages for tree-based proxies
+and annual means for the other kinds of proxies (<a class="reference external" href="https://cp.copernicus.org/articles/15/1251/2019/">Tardif et al. 2019</a>).
+For the <span class="math notranslate nohighlight">\(p^{th}\)</span> proxy, the PSM is calibrated relative to the
+NASA Goddard Institute for Space Studies surface temperature analysis (GISTEMP; <a class="reference external" href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2010RG000345">Hansen et al. 2010</a>),
+through the linear regression that gives the best fit to the proxy data.
+The regression residual <span class="math notranslate nohighlight">\(\sigma _p^2\)</span> is used as the observation error variance,
+i.e., the diagonal element of the diagonal matrix <strong>R</strong></p>
+<p>2. The model data is from the Community Earth System Model-Last Millennium Ensemble Project
+(CESM LME; <a class="reference external" href="https://journals.ametsoc.org/doi/10.1175/BAMS-D-14-00233.1">Otto-Bliesner et al., 2016</a>).
+Ensemble simulations of the CESM LME with full forcing,
+including the transient evolution of solar intensity, volcanic activity,
+orbital parameters, changes in land use/land cover and greenhouse gases,
+give a total of 13 full-forcing simulations from 850 to 2005 CE.
+For annual mean and seasonal averages,
+the monthly output is processed by removing the climatology over the entire period.</p>
+</section>
+<section id="surrogate-models">
+<h2>Surrogate models<a class="headerlink" href="#surrogate-models" title="Link to this heading"></a></h2>
+<p>The traditional online DA advances the numerical model from the posteriors,
+and provides priors with flow-dependent uncertainties for next DA cycle.
+Instead of using numerical models that are computationally expensive,
+data-driven surrogate models are used here for PDA_OL.
+Due to the different time scales of proxy records, the PSM requires different
+seasonal averages. Therefore, the integrate time of the surrogate model is usually the average
+time scale of the proxies, which is generally 12 months for PAGES2k. Based on this,
+the surrogate model is designed to take in a continuous 12 months of SAT and SST fields and
+predict for the subsequent 12 months:</p>
+<div class="math notranslate nohighlight">
+\[{\bf{X}}_{t{\rm{ + 1:t + 12}}}^f = M\left( {{\bf{X}}_{t - 12:t}^a} \right)\]</div>
+<p>where the superscripts <span class="math notranslate nohighlight">\(f\)</span> and <span class="math notranslate nohighlight">\(a\)</span> denote prior and posterior, respectively.
+<em>M</em> is a self-attention-based surrogate model (<a class="reference external" href="https://www.science.org/doi/10.1126/sciadv.adf2827">Zhou and Zhang 2023</a>)</p>
+<img alt="../_images/transformer.png" src="../_images/transformer.png" />
+<p>The loss function <em>L</em> is defined using the mean square eroor (MSE) of the 12 predictive months and the truth:</p>
+<div class="math notranslate nohighlight">
+\[L = \left\| {{\bf{X}}_{t + 1:t + 12}^{} - M\left( {{\bf{X}}_{t - 12:t}^{}} \right)} \right\|_{}^2\]</div>
+</section>
+<section id="da-methods">
+<h2>DA methods<a class="headerlink" href="#da-methods" title="Link to this heading"></a></h2>
+<p>Different from ensemble priors of offline DA
+that are randomly sampled from a climatological simulation,
+ensemble priors <span class="math notranslate nohighlight">\({\bf{x}}_{cyc,i}^f\)</span> (<span class="math notranslate nohighlight">\(i =1,…,N\)</span>) of online DA are short-term forecasts based on the surrogate models.
+The ensemble mean <span class="math notranslate nohighlight">\({\bf{\bar x}}_{cyc}^f = \left( {1/N} \right)\sum\limits_{i = 1}^N {{\bf{x}}_{cyc,i}^f}\)</span>
+and ensemble perturbations <span class="math notranslate nohighlight">\({\bf{x'}}_{cyc,i}^f\)</span> (<span class="math notranslate nohighlight">\(i =1,…,N\)</span>) are updated separately,
+but through the integrated hybrid EnKF (IHEnKF, <a class="reference external" href="https://journals.ametsoc.org/view/journals/mwre/149/12/MWR-D-21-0002.1.xml">Lei et al. 2021</a>)
+that is superior to the commonly used hybrid ensemble-variational method
+but within a pure ensemble framework.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Paleoclimate Data Assimilation documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Code.html" class="btn btn-neutral float-right" title="Code Structure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Sun H., Z. Zhao, and L. Lei.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

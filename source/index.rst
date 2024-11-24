@@ -6,7 +6,7 @@
 Paleoclimate Data Assimilation documentation
 ============================================
 
-This is a document for online paleoclimate data assimilation (PDA_OL). You can refer to the `MATLAB <https://github.com/lilisgroup/CoupleDA_matlab>`_ or `Python <https://github.com/lilisgroup/CoupleDA_python>`_ version of the code. 
+This is a document for online paleoclimate data assimilation (PDA). You can refer to the `MATLAB <https://github.com/lilisgroup/CoupleDA_matlab>`_ or `Python <https://github.com/lilisgroup/CoupleDA_python>`_ version of the code. 
 
 **Documentation contributors:**
 
@@ -16,7 +16,7 @@ This is a document for online paleoclimate data assimilation (PDA_OL). You can r
    :maxdepth: 2
    :caption: Contents:
 
-   pages/PaleoDA_OL
+   pages/Online_PDA
    pages/Code
    pages/Guide
 

@@ -1,7 +1,7 @@
-.. _Overview of PDA_OL:
+.. _Overview of Online PDA:
 
-Overview of PDA_OL
-==================
+Overview of Online PDA
+======================
 
 Proxies and simulations
 --------------------------------------------------
